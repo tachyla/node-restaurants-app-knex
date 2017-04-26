@@ -1,21 +1,38 @@
 {
-  "name": "node-restaurants-app-knex",
+  "name": "node-restaurants-knex",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
+<<<<<<< HEAD
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node drills.js",
     "nodemon": "nodemon drills.js"
+=======
+    "start": "node server.js",
+    "test": "mocha"
+>>>>>>> d6383e62149668bf16400e06e21f95c385e22d97
   },
-  "author": "Chris Klanac <cklanac@gmail.com>",
-  "license": "MIT",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
+<<<<<<< HEAD
     "express": "^4.15.2",
     "knex": "^0.12.6",
     "pg": "^6.1.2"
+=======
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "knex": "^0.12.9",
+    "morgan": "^1.7.0",
+    "pg": "^6.1.5"
+>>>>>>> d6383e62149668bf16400e06e21f95c385e22d97
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "faker": "^3.1.0",
+    "mocha": "^3.2.0"
   }
 }

@@ -1,3 +1,5 @@
+// clear the console before each run
+process.stdout.write('\033c');
 
 let express = require('express');
 let port = 8080;
@@ -92,4 +94,17 @@ app.listen(port, function(){
 // Unhandled rejection error: delete from "restaurants" where "id" = $1 - update or delete on table "restaura
 // nts" violates foreign key constraint "grades_restaurant_id_fkey" on table "grades"
 
-//hello
+
+// If you're using ElephantSQL then the connection will look like this
+/*
+const knex = require('knex')({
+  client: 'pg',
+  connection:'postgres://USERNAME:PASSWORD@stampy.db.elephantsql.com:5432/USERNAME'
+}
+*/
+
+// Sample select 
+knex.select('id', 'name', 'borough', 'cuisine')
+    .from('restaurants')
+    .then(results => console.log(results));
+>>>>>>> d6383e62149668bf16400e06e21f95c385e22d97
