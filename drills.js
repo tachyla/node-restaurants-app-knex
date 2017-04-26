@@ -1,40 +1,27 @@
-// clear the console before each run
-process.stdout.write('\033c');
-
-let express = require('express');
-let port = 8080;
-
-// Require Knex and make connection
-const knex = require('knex')({
-  client: 'pg',
-  connection: 
-    'postgres://luqxcabl:RbVXeengO8CHNxj0RBkNGAqDBer4F-BU@stampy.db.elephantsql.com:5432/luqxcabl'
-});
-let app = express();
-
-app.get('/restaurants/:id', (req, res) => {
-  knex.first('restaurants.id', 'name', 'cuisine', 'borough')
-  //the id needed restaurants because id is in both tables
-    .select(knex.raw(`CONCAT(address_building_number, ' ', address_street, ' ', address_zipcode ) as address`))
-    .from('restaurants')
-    .where('restaurants.id', req.params.id)
-    .innerJoin('grades', 'restaurants.id', 'grades.restaurant_id')
-    .orderBy('date', 'desc')
-    // .limit(10)-Limit not needed since we get a res based on our req
-    .then(results => res.json(results));
-});
-
-app.listen(port, function(){
-  console.log('Listening on port 8080');
-}); 
-
-// Sample select 
-// knex.select('id', 'name', 'borough', 'cuisine')
+//1. Get all Restaurants 
+// knex.select()
 //   .from('restaurants')
 //   .then(results => console.log(results));
 
+// 2. Get all italian restaurants
+// knex('restaurants')
+// .where({cuisine: 'Italian'})
+// .then(results => console.log(results));
+
+// 3. Get 10 Italian restaurants, subset of fields
+// knex('restaurants', 'id', 'name')
+// .where({cuisine: 'Italian'})
+// .limit(10)
+// .then(results => console.log(results));
+
+// 4. Count of Thai Restaurants
+// knex('restaurants', 'id', 'name')
+// .count().where({cuisine: 'Thai'})
+// .then(results => console.log(results));
+
+
 // 5.
-//knex('restaurants')
+// knex('restaurants')
 // .count()
 // .then(results => console.log(results));
 
@@ -91,20 +78,48 @@ app.listen(port, function(){
 // .where({id: '22'})
 // .del()
 // .then(results => console.log(results));
-// Unhandled rejection error: delete from "restaurants" where "id" = $1 - update or delete on table "restaura
-// nts" violates foreign key constraint "grades_restaurant_id_fkey" on table "grades"
+// ERROR: Unhandled rejection error: delete from "restaurants" 
+//where "id" = $1 - update or delete on table "restaurants" 
+//violates foreign key constraint "grades_restaurant_id_fkey" 
+//on table "grades"
+
+// using ElephantSQL url 
+// const knex = require('knex')({
+//   client: 'pg',
+//   connection:'postgres://USERNAME:PASSWORD@stampy.db.elephantsql.com:5432/USERNAME'
+// }
 
 
-// If you're using ElephantSQL then the connection will look like this
-/*
+// clear the console before each run
+process.stdout.write('\033c');
+//REQUIRE EXPRESS & DEFINE PORT
+let express = require('express');
+let port = 8080;
+
+// Require Knex and make connection to DATABASE
 const knex = require('knex')({
   client: 'pg',
-  connection:'postgres://USERNAME:PASSWORD@stampy.db.elephantsql.com:5432/USERNAME'
-}
-*/
+  connection: 
+    'postgres://luqxcabl:RbVXeengO8CHNxj0RBkNGAqDBer4F-BU@stampy.db.elephantsql.com:5432/luqxcabl'
+});
+//Initialize express
+let app = express();
 
-// Sample select 
-knex.select('id', 'name', 'borough', 'cuisine')
+//Make GET request for one Restaurant
+app.get('/restaurants/:id', (req, res) => {
+  knex.first('restaurants.id', 'name', 'cuisine', 'borough')
+  //id needs to be specified because 'id' exists in both restaurant & grades tables 
+    .select(knex.raw(`CONCAT(address_building_number, ' ', address_street, ' ', address_zipcode ) as address`))
     .from('restaurants')
-    .then(results => console.log(results));
->>>>>>> d6383e62149668bf16400e06e21f95c385e22d97
+    //req.params.id allows the sql to reuturn data based on the request
+    .where('restaurants.id', req.params.id)
+    .innerJoin('grades', 'restaurants.id', 'grades.restaurant_id')
+    .orderBy('date', 'desc')
+    // Limit not needed, req specifies data for 1 restaurant
+    .then(results => res.json(results));
+});
+
+//Define where port is listening
+app.listen(port, function(){
+  console.log('Listening on port 8080');
+}); 
